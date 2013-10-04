@@ -39,6 +39,7 @@
                 array('icon'=>'','label'=>'Revenue Report', 'url'=>array('/reports/revenue'),'visible'=>!Yii::app()->user->isGuest,),
                 array('icon'=>'','label'=>'Accounting Report', 'url'=>array('/reports/accounting'),'visible'=>!Yii::app()->user->isGuest),
                 array('icon'=>'','label'=>'Advance Ticket Sales', 'url'=>array('/reports/advanceTicketSales'),'visible'=>!Yii::app()->user->isGuest),
+                array('icon'=>'','label'=>'Teller and Pursers Report', 'url'=>array('/reports/tellers'),'visible'=>!Yii::app()->user->isGuest),
              ),
          ),
 	 '<div class="pull-right sub-brand"></div>',
