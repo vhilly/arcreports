@@ -1,20 +1,21 @@
 
 <div class=well>
-  <?php if(!$data['excel']):?>
-  <?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'success','buttonType'=>'link','icon'=>'share',
-  'url'=>Yii::app()->request->url.'&excel=1','label'=>'Export to Excel'));?>
- <br>
-	 <br>
     <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
         'id'=>'revenue-report',
         'method'=>'get',
         'type'=>'inline',
         'htmlOptions'=>array('class'=>''),
      )); ?>
+     <?php echo $form->dropDownListRow($data['rf'],'route',CHtml::listData(Route::model()->findAll(),'id','name'),array('class'=>'span2'))?>
         <?php echo $form->datePickerRow($data['rf'], 'date', array('append'=>'<i class="icon-calendar" style="cursor:pointer"></i>','class'=>'span2','options'=>array( 'format' => 'yyyy-mm-dd')));
     $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type'=>'primary', 'label'=>'Generate Report'));
     $this->endWidget();
     ?>
+  <?php if(!$data['excel']):?>
+  <?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'success','buttonType'=>'link','icon'=>'share',
+  'url'=>Yii::app()->request->url.'&excel=1','label'=>'Export to Excel'));?>
+  <br>
+  <br>
   <?php endif;?>
 <table class=table>
    <tr>
