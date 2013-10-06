@@ -137,7 +137,7 @@
       if(isset($_GET['ReportForm'])){
         $rf->attributes = $_GET['ReportForm'];
         $rf->date = $rf->date ? $rf->date : date('Y-m-d');
-        $bh = BookingHistory::model()->findAll(array('condition'=>"departure_date = '{$rf->date}' AND route=$rf->route",'order'=>'tkt_serial'));
+        $bh = BookingHistory::model()->findAll(array('condition'=>"departure_date = '{$rf->date}' AND route={$rf->route} AND booking_status < 6",'order'=>'tkt_serial' A));
         if(count($bh)){
           $i = 0;
           $tmp = null;
