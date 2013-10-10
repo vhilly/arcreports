@@ -22,6 +22,8 @@
  */
 class AdvanceTicket extends CActiveRecord
 {
+       public $date_range;
+
        public function getDbConnection() { 
          return Yii::app()->syncdb; 
        } 
@@ -49,7 +51,7 @@ class AdvanceTicket extends CActiveRecord
 			array('is_sync', 'length', 'max'=>1),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, tkt_no, class, type, seller, included_routes, amt, date_created, status, is_sync', 'safe', 'on'=>'search'),
+			array('id, tkt_no, class, type, seller, included_routes, amt,tkt_series, date_created,date_used, status, is_sync', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -106,14 +108,20 @@ class AdvanceTicket extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('tkt_no',$this->tkt_no,true);
+		$criteria->compare('tkt_series',$this->tkt_series,true);
 		$criteria->compare('class',$this->class);
 		$criteria->compare('type',$this->type);
 		$criteria->compare('seller',$this->seller);
 		$criteria->compare('included_routes',$this->included_routes,true);
 		$criteria->compare('amt',$this->amt,true);
 		$criteria->compare('date_created',$this->date_created,true);
+		$criteria->compare('date_used',$this->date_used,true);
 		$criteria->compare('status',$this->status);
 		$criteria->compare('is_sync',$this->is_sync,true);
+                if($this->date_range != ''){
+                  $dr=explode(' - ',$this->date_range);
+                  $criteria->addBetweenCondition('date_used', $dr[0], $dr[1]);
+                };
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

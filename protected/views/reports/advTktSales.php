@@ -1,6 +1,22 @@
 <?php $classes=CHtml::listData($data['classes'],'id','name');?>
 <div class='well'>
-<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'success','buttonType'=>'link','icon'=>'share',
+  <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+    'id'=>'advrevenue-report',
+    'method'=>'get',
+    'type'=>'inline',
+    'htmlOptions'=>array('class'=>''),
+  )); ?>
+  <?php echo $form->dateRangeRow($data['rf'], 'date_range',
+    array(
+      'placement'=>'left',
+      'options'=>array('format'=>'yyyy-MM-dd'),
+      //'options' => array('callback'=>'js:function(start, end){$("#ReportForm_date_range").val("\'"+ start.toString("yyyy-M-d")+"\' AND \'"+ end.toString("yyyy-M-d")+"\'") ;}')
+    ));
+    $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type'=>'primary', 'label'=>'Generate Report'));
+    $this->endWidget();
+  ?>
+<div class=clearfix></div>
+<?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'success','buttonType'=>'link','icon'=>'icon-share',
  'url'=>Yii::app()->request->url.'&excel=1','label'=>'Export to Excel'));?><br><br>
   <?php 
     $class=array();
@@ -61,19 +77,47 @@
       
     $gridColumns = array(
       array('name'=>'tkt_no', 'header'=>'Ticket No.'),
+      array('name'=>'tkt_series', 'header'=>'Series No.'),
       array('name'=>'seller', 'header'=>'Ticket Seller','value'=>'$data->seller0->name','filter'=>CHtml::listData(Sellers::model()->findAll(),'id','name')),
       array('name'=>'class', 'header'=>'Class' ,'value'=>'$data->class0->name','filter'=>$classes),
       array('name'=>'type', 'header'=>'Type' ,'value'=>'$data->type==2 ? "Student/Senior/PWD":$data->type0->name',
        'filter'=>array('1'=>'Full Fare','2'=>'Student/Senior/PWD')),
       array('name'=>'amt', 'header'=>'Amount'),
-      array('name'=>'date_created', 'header'=>'Date Created'),
-      array('name'=>'date_used', 'header'=>'Date Boarded'),
+      array(
+        'name'=>'date_created', 'header'=>'Date Created',
+        'filter'=>$this->widget('bootstrap.widgets.TbDatePicker', array(
+          'model'=>$data['model'],
+          'options'=>array('format'=>'yyyy-mm-dd'),
+          'htmlOptions' => array(
+            'id' => 'Booking_date_created',
+          ),
+          'attribute'=>'date_created'),
+          true),
+         'sortable'=>true,
+      ),
+      array(
+        'name'=>'date_used', 'header'=>'Date Boarded',
+        'filter'=>$this->widget('bootstrap.widgets.TbDatePicker', array(
+          'model'=>$data['model'],
+          'options'=>array('format'=>'yyyy-mm-dd'),
+          'htmlOptions' => array(
+            'id' => 'Booking_date_used',
+          ),
+          'attribute'=>'date_used'),
+          true),
+         'sortable'=>true,
+      ),
     );
     $this->widget(
       'bootstrap.widgets.TbGridView',
       array(
         'dataProvider' => $gridDataProvider,
         'filter'=>$data['model'],
+        'afterAjaxUpdate'=>"function() {
+          jQuery('#Booking_date_created').datepicker({'format':'yyyy-mm-dd','language':'en','weekStart':0});
+          jQuery('#Booking_date_used').datepicker({'format':'yyyy-mm-dd','language':'en','weekStart':0});
+          jQuery('.datepicker').hide();
+        }",
         'template' => "{items}{pager}",
         'columns' => $gridColumns,
         'type'=>'hover striped bordered',

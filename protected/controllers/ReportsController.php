@@ -118,15 +118,24 @@
     public function actionAdvanceTicketSales($excel=null){
       $model=new AdvanceTicket('search');
       $model->unsetAttributes();  // clear any default values
+      $rf = new ReportForm;
+      $dr='';
+      if(isset($_GET['ReportForm'])){
+        $rf->attributes=$_GET['ReportForm'];
+        if($rf->date_range){
+          $dr = " AND date_used BETWEEN '".str_replace(' - ','\' AND \'',$rf->date_range)."'";
+          $model->date_range=$rf->date_range;
+        }
+      }
       if(isset($_GET['AdvanceTicket'])){
         $model->attributes=$_GET['AdvanceTicket'];
       }
-      $at=AdvanceTicket::model()->findAll(array('condition'=>'status=2'));
+      $at=AdvanceTicket::model()->findAll(array('condition'=>"status=2 $dr"));
       $classes=SeatingClass::model()->findAll();
       if($excel)
-        $this->renderPartial('advTktSales',array('data'=>compact('at','classes','model','excel')));
+        $this->renderPartial('advTktSales',array('data'=>compact('at','classes','model','excel','rf')));
       else
-        $this->render('advTktSales',array('data'=>compact('at','classes','model','excel')));
+        $this->render('advTktSales',array('data'=>compact('at','classes','model','excel','rf')));
     }
     public function actionTellers($excel=null){
       $rf = new ReportForm;
