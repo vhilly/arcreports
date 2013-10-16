@@ -36,11 +36,11 @@
         var chart = new google.visualization.PieChart(document.getElementById(div));
         chart.draw(data, options);1
       }
-      function drawColumn(div,business,premium) {
+      function drawColumn(div,business,premium,cargo) {
         // Create and populate the data table.
         var data = google.visualization.arrayToDataTable([
-          ['Revenue', 'Premium Economy','Business Class'],
-          ['',premium,business]
+          ['Revenue', 'Premium Economy','Business Class','Cargo'],
+          ['',premium,business,cargo]
         ]);
       
         // Create and draw the visualization.
@@ -72,8 +72,10 @@
       <th class=fixWidth>BUSINESS CLASS</th>
       <th class=fixWidth>PREMIUM ECONOMY</th>
       <th class=fixWidth>TOTAL PAX</th>
+      <th class=fixWidth>TOTAL CARGO</th>
       <th class=fixWidth>REVENUE (Business Class)</th>
       <th class=fixWidth>REVENUE (Premium Economy)</th>
+      <th class=fixWidth>REVENUE (Cargo)</th>
       <th class=fixWidth>TOTAL REVENUE</th>
     </tr>
     <?php $row = $v->attributes; array_shift($row);?>
@@ -91,8 +93,10 @@
       <td class=fixWidth><?=$row['business_cnt']?></td>
       <td class=fixWidth><?=$row['premium_cnt']?></td>
       <td class=fixWidth><?=$row['total_cnt']?></td>
+      <td class=fixWidth><?=$row['cargo_total']?></td>
       <td class=fixWidth><?=number_format($row['business_rev'])?></td>
       <td class=fixWidth><?=number_format($row['premium_rev'])?></td>
+      <td class=fixWidth><?=number_format($row['cargo_rev'])?></td>
       <td class=fixWidth><?=number_format($row['total_rev'])?></td>
     </tr>
       <td colspan=18></td>
@@ -104,7 +108,7 @@
     </tr>
     <script>
       drawPie(<?=$key?>,<?=$row['reserved']?>,<?=$row['checked_in']?>,<?=$row['boarded']?>,<?=$row['total_cnt']?>);
-      drawColumn('c'+<?=$key?>,<?=$row['business_rev']?>,<?=$row['premium_rev']?>);
+      drawColumn('c'+<?=$key?>,<?=$row['business_rev']?>,<?=$row['premium_rev']?>,<?=$row['cargo_rev']?>);
     </script>
   <?php endforeach;?>
   </table>
