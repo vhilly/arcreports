@@ -140,52 +140,72 @@
     public function actionTellers($excel=null){
       $rf = new ReportForm;
       $sc = array(1=>'BC',2=>'PE');
-      $pt = array(1=>'FF',2=>'SF',3=>'SC',4=>'CHILD',5=>'INFANT',6=>'PWD',7=>'W/PASS','8'=>'Weekday',9=>'Weekday');
+      $pt = array(1=>'FULL',2=>'STUDENT',3=>'SENIOR',4=>'CHILDREN',5=>'INFANT',6=>'PWD',7=>'W/PASS','8'=>'Weekday',9=>'Weekday');
       $output = array();
       $total=0;
       if(isset($_GET['ReportForm'])){
         $rf->attributes = $_GET['ReportForm'];
         $rf->date = $rf->date ? $rf->date : date('Y-m-d');
         $bh = BookingHistory::model()->findAll(array('condition'=>"departure_date = '{$rf->date}' AND route={$rf->route} AND booking_status < 6",'order'=>'tkt_serial'));
+        $sql = "SELECT voyage,COUNT(*) cnt,SUM(amt) amt FROM cargo_history WHERE departure_date='{$rf->date}' AND route='{$rf->route}' AND booking_status < 6 GROUP BY voyage";
+        $ch=Yii::app()->db->createCommand($sql)->queryAll();
         if(count($bh)){
           $i = 0;
           $tmp = null;
-          $tmpSerial = null;
-          $last = '';
+          $tmp2 = null;
           $cnt=1;
+          $cnt2=array();
           foreach($bh as $b){
-	    $kor=$pt[$b->passenger_type].'-'.$sc[$b->seating_class];
             if(is_numeric($b->tkt_serial)){
-              if($tmp == $kor){
-                $cnt++;
-                $output[$i-1][1]=$tmpSerial.'-'.$b->tkt_serial;
-	        $output[$i-1][3]=$cnt;
-	        $output[$i-1][5]=number_format($b->amt*$cnt);
-              }else{
-	        $output[$i] = array($kor,$b->tkt_serial);
-                $tmpSerial=$b->tkt_serial;
+             if($tmp2 != $b->voyage){
+               $tmp = null;
+               $i=0;
+             }
+             $tmp2=$b->voyage;
+             $kor=$sc[$b->seating_class].'-'.$pt[$b->passenger_type];
+              if($tmp != $kor){
                 $cnt=1;
-	        $output[$i][3]=$cnt;
-	        $output[$i][4]=$b->amt;
-	        $output[$i][5]=$b->amt;
                 $i++;
+                $output[$b->voyage][$b->seating_class][$i][0] = $pt[$b->passenger_type];
+                $output[$b->voyage][$b->seating_class][$i][1] = $b->tkt_serial;
+                $output[$b->voyage][$b->seating_class][$i][2] = '-';
+                $output[$b->voyage][$b->seating_class][$i][3] = '';
+                $output[$b->voyage][$b->seating_class][$i][4] = $cnt.'x';
+                $output[$b->voyage][$b->seating_class][$i][5] = $b['amt'];
+                $output[$b->voyage][$b->seating_class][$i][6] = number_format($b->amt*$cnt);
+              }else{
+                $output[$b->voyage][$b->seating_class][$i][3] = $b->tkt_serial;
+                $cnt++;
+                $output[$b->voyage][$b->seating_class][$i][4] = $cnt.'x';
+                $output[$b->voyage][$b->seating_class][$i][6] = number_format($b->amt*$cnt);
               }
               $tmp=$kor;
             }else{
-	        @$output[$kor][0]=$kor;
-	        @$output[$kor][1]='No Series';
-	        @$output[$kor][2]+=1;
-	        @$output[$kor][3]=$b->amt;
-	        @$output[$kor][4]=number_format($output[$kor][2]*$b->amt);
+               $kor2=$sc[$b->seating_class].'-'.$pt[$b->passenger_type];
+               @$cnt2[$kor2]++;
+               $output[$b->voyage][$b->seating_class][$kor2][0] = $pt[$b->passenger_type];
+               $output[$b->voyage][$b->seating_class][$kor2][1] = '';
+               $output[$b->voyage][$b->seating_class][$kor2][2] = '-';
+               $output[$b->voyage][$b->seating_class][$kor2][3] = '';
+               $output[$b->voyage][$b->seating_class][$kor2][4] = $cnt2[$kor2].'x';
+               $output[$b->voyage][$b->seating_class][$kor2][5] = $b->amt;
+               $output[$b->voyage][$b->seating_class][$kor2][6] = number_format($b->amt*$cnt2[$kor2]);
             }
+            @$totalPerVoyage[$b->voyage]['total']+=$b['amt'];;
+            @$totalPerVoyage[$b->voyage][$b->seating_class]+=$b['amt'];;
             $total+=$b->amt;
+          }
+        }
+        if(count($ch)){
+          foreach($ch as $c){
+            @$output[$c['voyage']]['cargo']=array('cnt'=>$c['cnt'],'amt'=>$c['amt']);
           }
         }
       }
       if($excel)
-        $this->renderPartial('tellers',array('data'=>compact('total','output','rf','excel')));
+        $this->renderPartial('tellers',array('data'=>compact('total','output','rf','excel','totalPerVoyage')));
       else
-        $this->render('tellers',array('data'=>compact('total','output','rf','excel')));
+        $this->render('tellers',array('data'=>compact('total','output','rf','excel','totalPerVoyage')));
 
     }
   }

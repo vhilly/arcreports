@@ -31,7 +31,7 @@
     <?php 
        foreach($d as $c){
          $col['count'] +=1;
-         $col['voyage'][] = $c['voyage'];
+         $col['voyage'][] = $c['voyage'].' '.date('g:i:A',strtotime($c['departure_time']));
          $col['trips'][] = 1;
          $col['rev'][] = number_format($c['total_rev']);
          $col['bc_full'][] = $c['bc_full'];
