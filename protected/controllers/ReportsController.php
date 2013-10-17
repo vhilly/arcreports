@@ -13,7 +13,7 @@
           'users'=>array('*'),
         ),
         array('allow', // allow authenticated user to perform 'create' and 'update' actions
-          'actions'=>array('currentVoyages','voyages','revenue','accounting','advanceTicketSales','tellers'),
+          'actions'=>array('currentVoyages','voyages','revenue','accounting','advanceTicketSales','tellers','dynamicVoyages'),
           'users'=>array('@'),
         ),
         array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -146,8 +146,11 @@
       if(isset($_GET['ReportForm'])){
         $rf->attributes = $_GET['ReportForm'];
         $rf->date = $rf->date ? $rf->date : date('Y-m-d');
-        $bh = BookingHistory::model()->findAll(array('condition'=>"departure_date = '{$rf->date}' AND route={$rf->route} AND booking_status < 6",'order'=>'tkt_serial'));
-        $sql = "SELECT voyage,COUNT(*) cnt,SUM(amt) amt FROM cargo_history WHERE departure_date='{$rf->date}' AND route='{$rf->route}' AND booking_status < 6 GROUP BY voyage";
+        $voyage='';
+        if($rf->voyage)
+          $voyage="AND voyage_id = '{$rf->voyage}'";
+        $bh = BookingHistory::model()->findAll(array('condition'=>"departure_date = '{$rf->date}' {$voyage}  AND route={$rf->route} AND booking_status < 6",'order'=>'tkt_serial'));
+        $sql = "SELECT voyage,COUNT(*) cnt,SUM(amt) amt FROM cargo_history WHERE departure_date='{$rf->date}' {$voyage} AND route='{$rf->route}' AND booking_status < 6 GROUP BY voyage";
         $ch=Yii::app()->db->createCommand($sql)->queryAll();
         if(count($bh)){
           $i = 0;
@@ -207,5 +210,13 @@
       else
         $this->render('tellers',array('data'=>compact('total','output','rf','excel','totalPerVoyage')));
 
+    }
+    public function actionDynamicVoyages(){
+      $data=BookingHistory::model()->findAll(array('condition'=>"departure_date='{$_POST['ReportForm']['date']}'",'group'=>'voyage_id'));
+       $data=CHtml::listData($data,'voyage_id','voyage');
+        foreach($data as $value=>$name){
+        echo CHtml::tag('option',
+                   array('value'=>$value),CHtml::encode($name),true);
+      }
     }
   }

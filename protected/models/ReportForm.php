@@ -4,9 +4,10 @@
     public $date;
     public $type;
     public $route;
+    public $voyage;
     public function rules(){
        return array( 
-         array('date_range,date','length','max'=>255),
+         array('date_range,date,voyage','length','max'=>255),
 	 array('type,route', 'numerical', 'integerOnly'=>true),
        );
     }
@@ -15,6 +16,7 @@
         'date_range' => 'Date Range',
         'date' => 'Date',
         'route' => 'Route',
+        'voyage' => 'Voyage',
       );
     }
   }

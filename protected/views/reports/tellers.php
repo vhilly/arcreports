@@ -7,8 +7,16 @@
         'type'=>'inline',
         'htmlOptions'=>array('class'=>''),
      )); ?>
+     <?php echo $form->dropDownListRow($data['rf'],'voyage',array(),array('class'=>'span2'))?>
      <?php echo $form->dropDownListRow($data['rf'],'route',CHtml::listData(Route::model()->findAll(),'id','name'),array('class'=>'span2'))?>
-        <?php echo $form->datePickerRow($data['rf'], 'date', array('append'=>'<i class="icon-calendar" style="cursor:pointer"></i>','class'=>'span2','options'=>array( 'format' => 'yyyy-mm-dd')));
+     <?php echo $form->datePickerRow($data['rf'], 'date', array('append'=>'<i class="icon-calendar" style="cursor:pointer"></i>','class'=>'span2',
+        'options'=>array( 'format' => 'yyyy-mm-dd'),
+        'ajax' => array(
+        'type'=>'POST', //request type
+        'url'=>CController::createUrl('/reports/dynamicVoyages'),
+        'update'=>'#ReportForm_voyage'
+      )
+     ));
     $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'submit', 'type'=>'primary', 'label'=>'Generate Report'));
     $this->endWidget();
     ?>
@@ -103,3 +111,8 @@
 ?>
   <?php endif;?>
 </div>
+<script>
+jQuery(function($) {
+  jQuery.ajax({'type':'POST','url':'/reports/index.php?r=reports/dynamicVoyages','cache':false,'data':{'ReportForm[date]':'<?=$data['rf']->date?>'},'success':function(html){jQuery("#ReportForm_voyage").html(html)}});
+});
+</script>

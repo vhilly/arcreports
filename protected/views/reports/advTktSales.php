@@ -61,6 +61,7 @@
       <?php $this->endWidget(); ?>
     <?php endif;?>
   <?php endforeach;?>
+  <br>
   <?php $box = $this->beginWidget(
     'bootstrap.widgets.TbBox',
     array(
@@ -124,7 +125,7 @@
       )
     );
   ?>
-  <?php $this->endWidget()?>
+  <?php $this->endWidget();?>
   <?php if($data['excel']):?>
 <?php
      $file ='ADVANCE_TKT_SALES.xls';
