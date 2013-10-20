@@ -26,7 +26,7 @@
     $col=array();
     $col['count'] =0;
   ?>
-  <?php foreach($data as $key=>$d):?>
+  <?php foreach($data['passenger'] as $key=>$d):?>
     <?php $date[] = $key;?>
     <?php 
        foreach($d as $c){
@@ -62,8 +62,10 @@
          $col['b_cap'][] = 159;
          $col['pe_cap'][] = 105;
          $col['total_cap'][] = 264;
-
+         $col['cargo']['amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? $data['cargo'][$key][$c['voyage']]['amt']:number_format(0,2);
        }
+       $col['cargo']['amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? '<b>'.number_format(array_sum(
+         array_map(function($cargo){return $cargo['amt'];},$data['cargo'][$key])),2).'</b>':number_format(0,2);
        $col['count'] +=1;
        $col['voyage'][]='Total';
        $col['trips'][] = '<b>'.count($d).'</b>';
@@ -144,13 +146,16 @@
       <tr><th>BC</th></tr>
       <tr><th>P/E</th></tr>
       <tr><th>Total Load Factor</th></tr>
+      <tr><th class="bold space">VEHICLES FREIGHT:</th></tr>
+      <tr><th class="date bold right">Date</th></tr>
+      <tr><th>Total Vehicle Revenue</th></tr>
     </table>
 
     <div class="scrollField">
       <table class="scrollHeader">
         <tr>
           <?php foreach($date as $d8):?>
-          <td colspan=<?=count($data[$d8])+1?> class=date><center><?=date('l, F d, Y',strtotime($d8))?></center></td>
+          <td colspan=<?=count($data['passenger'][$d8])+1?> class=date><center><?=date('l, F d, Y',strtotime($d8))?></center></td>
           <?php endforeach;?>
         </tr>
         <tr>
@@ -230,7 +235,7 @@
         </tr>
         <tr>
           <?php foreach($date as $d8):?>
-          <td colspan=<?=count($data[$d8])+1?> class=date><center><?=date('l, F d, Y',strtotime($d8))?></center></td>
+          <td colspan=<?=count($data['passenger'][$d8])+1?> class=date><center><?=date('l, F d, Y',strtotime($d8))?></center></td>
           <?php endforeach;?>
         </tr>
         <tr>
@@ -268,6 +273,20 @@
         </tr>
         <tr>
           <td><?= implode('%</td><td>',$col['total_lf'])?>%</td>
+        </tr>
+        <tr>
+          <td class="space" colspan=<?=$col['count']?>>&nbsp;</td>
+        </tr>
+        <tr>
+          <?php foreach($date as $d8):?>
+          <td colspan=<?=count($data['passenger'][$d8])+1?> class=date><center><?=date('l, F d, Y',strtotime($d8))?></center></td>
+          <?php endforeach;?>
+        </tr>
+        <tr>
+          <td class="space" colspan=<?=$col['count']?>>&nbsp;</td>
+        </tr>
+        <tr>
+          <td><?= implode('</td><td>',$col['cargo']['amt'])?></td>
         </tr>
       </table>
     </div>

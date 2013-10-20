@@ -44,14 +44,14 @@ class AdvanceTicket extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('tkt_no, class, type, seller, included_routes, amt, date_created', 'required'),
-			array('class, type, seller, status', 'numerical', 'integerOnly'=>true),
+			array('class, type,is_billed, seller, status', 'numerical', 'integerOnly'=>true),
 			array('tkt_no', 'length', 'max'=>32),
 			array('included_routes', 'length', 'max'=>255),
 			array('amt', 'length', 'max'=>20),
 			array('is_sync', 'length', 'max'=>1),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, tkt_no, class, type, seller, included_routes, amt,tkt_series, date_created,date_used, status, is_sync', 'safe', 'on'=>'search'),
+			array('id, tkt_no, class, type, seller, included_routes, amt,tkt_series, date_created,date_used, status,is_billed, is_sync', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,6 +84,7 @@ class AdvanceTicket extends CActiveRecord
 			'amt' => 'Amt',
 			'date_created' => 'Date Created',
 			'status' => 'Status',
+			'is_billed' => 'Billed',
 			'is_sync' => 'Is Sync',
 		);
 	}
@@ -117,6 +118,7 @@ class AdvanceTicket extends CActiveRecord
 		$criteria->compare('date_created',$this->date_created,true);
 		$criteria->compare('date_used',$this->date_used,true);
 		$criteria->compare('status',$this->status);
+		$criteria->compare('is_billed',$this->is_billed);
 		$criteria->compare('is_sync',$this->is_sync,true);
                 if($this->date_range != ''){
                   $dr=explode(' - ',$this->date_range);

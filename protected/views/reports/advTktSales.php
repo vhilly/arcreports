@@ -84,6 +84,7 @@
       array('name'=>'type', 'header'=>'Type' ,'value'=>'$data->type==2 ? "Student/Senior/PWD":$data->type0->name',
        'filter'=>array('1'=>'Full Fare','2'=>'Student/Senior/PWD')),
       array('name'=>'amt', 'header'=>'Amount'),
+      array('name'=>'is_billed', 'header'=>'Billed','value'=>'$data->is_billed ? "Yes":"No"','filter'=>array(1=>'Yes',0=>'No')),
       array(
         'name'=>'date_created', 'header'=>'Date Created',
         'filter'=>$this->widget('bootstrap.widgets.TbDatePicker', array(
@@ -110,8 +111,9 @@
       ),
     );
     $this->widget(
-      'bootstrap.widgets.TbGridView',
+      'bootstrap.widgets.TbExtendedGridView',
       array(
+        'id'=>'advTktGrid',
         'dataProvider' => $gridDataProvider,
         'filter'=>$data['model'],
         'afterAjaxUpdate'=>"function() {
@@ -122,6 +124,30 @@
         'template' => "{items}{pager}",
         'columns' => $gridColumns,
         'type'=>'hover striped bordered',
+        'ajaxUrl'=>'',
+        'bulkActions' => array(
+          'actionButtons' => array(
+            array(
+              'buttonType' => 'button',
+              'type' => 'primary',
+              'size' => 'small',
+              'label' => 'Mark as Billed',
+              'id' =>'btnBilled',
+               'click' => 'js:billingStatus(checked,this.id)'
+            ),
+            array(
+              'buttonType' => 'button',
+              'type' => 'inverse',
+              'size' => 'small',
+              'label' => 'Mark as Unbilled',
+              'id' =>'btnUnBilled',
+               'click' => 'js:billingStatus(checked,this.id)'
+            ),
+          ),
+          'checkBoxColumnConfig' => array(
+            'name' => 'id'
+          ),
+        ),
       )
     );
   ?>
@@ -142,3 +168,22 @@
 ?>
   <?php endif;?>
 </div>
+
+<script>
+  function billingStatus(checked,btnId){
+    if(confirm("Are you sure?")){
+      var values = [];
+      var billed = btnId=='btnBilled'? 1:0;
+      checked.each(function(){
+        values.push($(this).val());
+      }); 
+      $.ajax({
+        url:"<?=Yii::app()->createUrl('reports/markAsBilled')?>", 
+        data: {is_billed:billed,ids:values.join(",")},
+        success:function(data){ 
+          $("#advTktGrid").yiiGridView("update"); 
+        }
+      });
+    }
+  }
+</script>

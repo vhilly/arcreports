@@ -74,23 +74,21 @@
      <th><u>VEHICLES FREIGHT</u></th>
      <td colspan=6></td>
    </tr>
+   <?php foreach($data['output'][$k]['cargo']['per_cargo'] as $c):?>
    <tr>
-     <td>ROLLING CARGO</td>
-     <td colspan=3></td>
-     <td>x<?=$data['output'][$k]['cargo']['cnt']?></td>
-     <td></td>
-     <th><?=number_format($data['output'][$k]['cargo']['amt'])?></th>
+     <td><?=implode('</td><td>',$c)?></td>
    </tr>
+   <?php endforeach;?>
    <tr>
      <td>TOTAL VECHICLE REVENUE</td>
      <td colspan=5></td>
-     <th><?=number_format($data['output'][$k]['cargo']['amt'])?></th>
+     <th><?=number_format($data['output'][$k]['cargo']['total_revenue'],2)?></th>
    </tr>
   <?php endif;?>
    <tr>
      <th>GRAND TOTAL</th>
      <td colspan=5></td>
-     <th><?=@number_format($data['output'][$k]['cargo']['amt']+$data['totalPerVoyage'][$k]['total'])?></th>
+     <th><?=@number_format($data['output'][$k]['cargo']['total_revenue']+$data['totalPerVoyage'][$k]['total'],2)?></th>
    </tr>
    <?php endforeach;?>
 </table>
