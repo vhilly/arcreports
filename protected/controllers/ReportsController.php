@@ -133,16 +133,18 @@
           $dr = " AND date_used BETWEEN '".str_replace(' - ','\' AND \'',$rf->date_range)."'";
           $model->date_range=$rf->date_range;
         }
+     
       }
       if(isset($_GET['AdvanceTicket'])){
         $model->attributes=$_GET['AdvanceTicket'];
       }
+      $collections=Collections::model()->findAll(array('condition'=>"1 $dr"));
       $at=AdvanceTicket::model()->findAll(array('condition'=>"status=2 $dr"));
       $classes=SeatingClass::model()->findAll();
       if($excel)
-        $this->renderPartial('advTktSales',array('data'=>compact('at','classes','model','excel','rf')));
+        $this->renderPartial('advTktSales',array('data'=>compact('at','classes','model','excel','rf','collections')));
       else
-        $this->render('advTktSales',array('data'=>compact('at','classes','model','excel','rf')));
+        $this->render('advTktSales',array('data'=>compact('at','classes','model','excel','rf','collections')));
     }
     public function actionTellers($excel=null){
       $rf = new ReportForm;

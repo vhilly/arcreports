@@ -152,6 +152,38 @@
     );
   ?>
   <?php $this->endWidget();?>
+  <?php if($data['collections']):?>
+  <?php $seller=CHtml::listData(Sellers::model()->findAll(),'id','name')?>
+  <?php $box = $this->beginWidget(
+    'bootstrap.widgets.TbBox',
+    array(
+      'title' => 'COLLECTIONS',
+      'headerIcon' => 'icon-money',
+      'htmlOptions' => array('class' => 'bootstrap-widget-table')
+    )
+  );?>
+      <table class='table table-hover'>
+        <tr>
+          <th>Date</th>
+          <th>Client</th>
+          <th>Collections</th>
+        <tr>
+        <?php foreach($data['collections'] as $c):?>
+        <tr>
+          <td><?=$c->date?></td>
+          <td><?=$seller[$c->seller]?></td>
+          <td><?=$c->value?></td>
+          <td>
+            <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'link', 'type'=>'primary', 'label'=>'Add Collection',
+             'url'=>Yii::app()->createUrl('collections/update',array('id'=>$c->id)),'label'=>'Update'));?>
+          </td>
+        </tr>
+        <?php endforeach;?>
+      </table>
+  <?php $this->endWidget();?>
+  <?php endif;?>
+  <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'link', 'type'=>'success', 'label'=>'Add Collection',
+   'url'=>Yii::app()->createUrl('collections/create'),'label'=>'Add Collection'));?>
   <?php if($data['excel']):?>
 <?php
      $file ='ADVANCE_TKT_SALES.xls';
