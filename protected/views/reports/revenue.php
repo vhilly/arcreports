@@ -47,12 +47,12 @@
       
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawColumn);
-      function drawColumn(div,business,premium) {
+      function drawColumn(div,business,premium,cargo) {
         // Create and populate the data table.
         var data = google.visualization.arrayToDataTable([
-          ['Revenue', 'Premium Economy','Business Class'],
+          ['Revenue', 'Premium Economy','Business Class','Cargo'],
 	  <?php foreach($result as $r):?>
-            ['<?=$r['departure_date']?>',<?=$r['premium_rev']?>,<?=$r['business_rev']?>],
+            ['<?=$r['departure_date']?>',<?=$r['premium_rev']?>,<?=$r['business_rev']?>,<?=$r['cargo_rev']?>],
 	  <?php endforeach;?>
         ]);
         // Create and draw the visualization.

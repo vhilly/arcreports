@@ -53,7 +53,7 @@
           $where = " WHERE departure_date BETWEEN {$rf->date_range}";
         else
           $where = "  WHERE departure_date BETWEEN CURDATE() AND CURDATE()";
-        $sql = "SELECT $select,vessel,voyage,sum(total_rev) total_rev,sum(business_rev) business_rev,sum(premium_rev) premium_rev FROM voyage_report $where GROUP BY $group";
+        $sql = "SELECT $select,vessel,voyage,sum(total_rev) total_rev,sum(business_rev) business_rev,sum(premium_rev) premium_rev,sum(cargo_rev) cargo_rev FROM voyage_report $where GROUP BY $group";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
       }
       $this->render('revenue',array('result'=>$result,'rf'=>$rf,'type'=>$rf->type));
