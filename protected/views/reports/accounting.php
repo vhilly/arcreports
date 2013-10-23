@@ -292,7 +292,7 @@
           <td>
             <?php if(is_array($v)):?>
               <?php foreach($v as $k=>$a):?>
-                <?=$a[0]?$a[0]:'N/A'?> - <?=count($a)?>x <?=$k?> = <?=count($a)*$k?>
+                <?=$a[0]?$a[0]:'N/A'?> - <?=count($a)?>x <?=number_format($k,2)?> = <?=number_format(count($a)*$k)?>
                 <br>
               <?php endforeach;?>
             <?php else:?>
