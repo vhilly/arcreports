@@ -42,10 +42,12 @@
          $col['b_cap'][] = 159;
          $col['pe_cap'][] = 105;
          $col['total_cap'][] = 264;
-         $col['cargo']['amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? $data['cargo'][$key][$c['voyage']]['amt']:number_format(0,2);
+         $col['cargo']['total_amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? number_format($data['cargo'][$key][$c['voyage']]['total_amt'],2):number_format(0,2);
+         $col['cargo']['per_amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? $data['cargo'][$key][$c['voyage']]['amt']:0;
        }
-       $col['cargo']['amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? '<b>'.number_format(array_sum(
-         array_map(function($cargo){return $cargo['amt'];},$data['cargo'][$key])),2).'</b>':number_format(0,2);
+       $col['cargo']['total_amt'][]=isset($data['cargo'][$key][$c['voyage']]) ? '<b>'.number_format(array_sum(
+         array_map(function($cargo){return $cargo['total_amt'];},$data['cargo'][$key])),2).'</b>':number_format(0,2);
+       $col['cargo']['per_amt'][]='';
        $col['count'] +=1;
        $col['voyage'][]='Total';
        $col['trips'][] = '<b>'.count($d).'</b>';
@@ -258,8 +260,23 @@
         </tr>
         <tr>
         <tr>
-          <th>Total Vehicle Revenue</th>
-          <td><?= implode('</td><td>',$col['cargo']['amt'])?></td>
+          <th></th>
+          <?php foreach($col['cargo']['per_amt'] as $v):?>
+          <td>
+            <?php if(is_array($v)):?>
+              <?php foreach($v as $k=>$a):?>
+                <?=$a[0]?$a[0]:'N/A'?> - <?=count($a)?>x = <?=$k?>
+                <br>
+              <?php endforeach;?>
+            <?php else:?>
+              <?=$v?>
+            <?php endif;?>
+          </td>
+          <?php endforeach;?>
+        </tr>
+        <tr>
+          <th>Vehicle Revenue</th>
+          <td><?= implode('</td><td>',$col['cargo']['total_amt'])?></td>
         </tr>
       </table>
 <?php $output = ob_get_clean()?>

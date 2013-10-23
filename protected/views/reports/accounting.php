@@ -150,7 +150,8 @@
       <tr><th>Total Load Factor</th></tr>
       <tr><th class="bold space">VEHICLES FREIGHT:</th></tr>
       <tr><th class="date bold right">Date</th></tr>
-      <tr><th>Total Vehicle Revenue</th></tr>
+      <tr><th>&nbsp;</th></tr>
+      <tr><th>Vehicle Revenue</th></tr>
     </table>
 
     <div class="scrollField">
@@ -292,7 +293,7 @@
           <td>
             <?php if(is_array($v)):?>
               <?php foreach($v as $k=>$a):?>
-                <?=$a[0]?> - <?=count($a)?>x = <?=$k?>
+                <?=$a[0]?$a[0]:'N/A'?> - <?=count($a)?>x = <?=$k?>
                 <br>
               <?php endforeach;?>
             <?php else:?>

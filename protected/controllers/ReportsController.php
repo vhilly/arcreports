@@ -109,7 +109,7 @@
             $data['passenger'][$r['departure_date']][] = $r;
           }
         }
-        $sql="SELECT voyage,departure_date,SUM(amt) amt,passenger_type length FROM cargo_history $where GROUP BY departure_date,voyage_id,id";
+        $sql="SELECT voyage,departure_date,SUM(amt) amt,seating_class length FROM cargo_history $where GROUP BY departure_date,voyage_id,id";
         $result2=Yii::app()->db->createCommand($sql)->queryAll();
         if(count($result2)){
           foreach($result2 as $r2){
