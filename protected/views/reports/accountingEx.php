@@ -265,7 +265,7 @@
           <td>
             <?php if(is_array($v)):?>
               <?php foreach($v as $k=>$a):?>
-                <?=$a[0]?$a[0]:'N/A'?> - <?=count($a)?>x = <?=$k?>
+                <?=$a[0]?$a[0]:'N/A'?> - <?=count($a)?>x <?=$k?> = <?=count($a)*$k?>
                 <br>
               <?php endforeach;?>
             <?php else:?>
@@ -275,7 +275,7 @@
           <?php endforeach;?>
         </tr>
         <tr>
-          <th>Vehicle Revenue</th>
+          <th class="bold space">VEHICLES TOTAL REVENUE</th>
           <td><?= implode('</td><td>',$col['cargo']['total_amt'])?></td>
         </tr>
       </table>
