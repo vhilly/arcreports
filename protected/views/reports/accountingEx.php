@@ -22,6 +22,7 @@
          $col['bc_full_promo'][] = $c['bc_full_promo'];
          $col['bc_ssp_promo'][] = $c['bc_ssp_promo'];
          $col['bc_pass'][] = $c['bc_pass'];
+         $col['bc_driver'][] = $c['bc_driver'];
          $col['bc_total_pax'][] = $c['bc_total_pax'];
          $col['bc_lf'][] = number_format($c['bc_total_pax']/159*100);
 
@@ -31,6 +32,7 @@
          $col['pe_half'][] = $c['pe_half'];
          $col['pe_pwd'][] = $c['pe_pwd'];
          $col['pe_pass'][] = $c['pe_pass'];
+         $col['pe_driver'][] = $c['pe_driver'];
          $col['pe_total_pax'][] = $c['pe_total_pax'];
          $col['pe_lf'][] = number_format($c['pe_total_pax']/105*100);
 
@@ -60,6 +62,7 @@
        $col['bc_full_promo'][] = '<b>'.array_sum(array_map(function($bcfullpromo){return $bcfullpromo['bc_full_promo'];},$d)).'</b>';
        $col['bc_ssp_promo'][] = '<b>'.array_sum(array_map(function($bcssppromo){return $bcssppromo['bc_ssp_promo'];},$d)).'</b>';
        $col['bc_pass'][] = '<b>'.array_sum(array_map(function($bcpass){return $bcpass['bc_pass'];},$d)).'</b>';
+       $col['bc_driver'][] = '<b>'.array_sum(array_map(function($bcdriver){return $bcdriver['bc_driver'];},$d)).'</b>';
 
        $col['pe_full'][] = '<b>'.array_sum(array_map(function($pefull){return $pefull['pe_full'];},$d)).'</b>';
        $col['pe_senior'][] = '<b>'.array_sum(array_map(function($pesenior){return $pesenior['pe_senior'];},$d)).'</b>';
@@ -67,6 +70,7 @@
        $col['pe_half'][] = '<b>'.array_sum(array_map(function($pehalf){return $pehalf['pe_half'];},$d)).'</b>';
        $col['pe_pwd'][] = '<b>'.array_sum(array_map(function($pepwd){return $pepwd['pe_pwd'];},$d)).'</b>';
        $col['pe_pass'][] = '<b>'.array_sum(array_map(function($pepass){return $pepass['pe_pass'];},$d)).'</b>';
+       $col['pe_driver'][] = '<b>'.array_sum(array_map(function($pedriver){return $pedriver['pe_driver'];},$d)).'</b>';
 
        $col['total_pax'][] = '<b>'.array_sum(array_map(function($totalpax){return $totalpax['total_pax'];},$d)).'</b>';
        $col['total_pax_al'][] = '<b>'.number_format(array_sum(array_map(function($bctotalpax){return $bctotalpax['bc_total_pax'];},$d))/count($d) +
@@ -146,6 +150,9 @@
       <th>BC-W/PASS</th>
           <td><?= implode('</td><td>',$col['bc_pass'])?></td>
         </tr>
+      <th>BC-DRIVER/ASSISTANT</th>
+          <td><?= implode('</td><td>',$col['bc_driver'])?></td>
+        </tr>
         <tr>
       <th>P/E-Full</th>
           <td><?= implode('</td><td>',$col['pe_full'])?></td>
@@ -169,6 +176,9 @@
         <tr>
       <th>PE-W/PASS</th>
           <td><?= implode('</td><td>',$col['pe_pass'])?></td>
+        </tr>
+      <th>PE-DRIVER/ASSISTANT</th>
+          <td><?= implode('</td><td>',$col['pe_driver'])?></td>
         </tr>
         <tr>
       <th class="bold">Total Passengers</th>

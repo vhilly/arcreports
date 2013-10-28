@@ -94,6 +94,8 @@
 
         SUM( IF( booking_status <6 AND seating_class =1 AND passenger_type =8, 1, 0 ) ) bc_full_promo,
         SUM( IF( booking_status <6 AND seating_class =1 AND passenger_type =9, 1, 0 ) ) bc_ssp_promo,
+        SUM( IF( booking_status <6 AND seating_class =1 AND passenger_type =10, 1, 0 )) bc_driver,
+        SUM( IF( booking_status <6 AND seating_class =2 AND passenger_type =10, 1, 0 )) pe_driver,
 
         SUM( IF( booking_status <6 AND seating_class =1, amt, 0 ) ) business_rev, 
         SUM( IF( booking_status <6 AND seating_class =2, amt, 0 ) ) premium_rev, 
@@ -150,7 +152,7 @@
     public function actionTellers($excel=null){
       $rf = new ReportForm;
       $sc = array(1=>'BC',2=>'PE');
-      $pt = array(1=>'FULL',2=>'STUDENT',3=>'SENIOR',4=>'CHILDREN',5=>'INFANT',6=>'PWD',7=>'W/PASS','8'=>'Weekday',9=>'Weekday');
+      $pt = array(1=>'FULL',2=>'STUDENT',3=>'SENIOR',4=>'CHILDREN',5=>'INFANT',6=>'PWD',7=>'W/PASS','8'=>'Weekday',9=>'Weekday',10=>'DRIVER/ASSISTANT');
       $output = array();
       $total=0;
       if(isset($_GET['ReportForm'])){
