@@ -1,4 +1,5 @@
 <?php $classes=CHtml::listData($data['classes'],'id','name');?>
+<?php if(!$data['excel']):?>
 <div class='well'>
   <?php $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     'id'=>'advrevenue-report',
@@ -18,6 +19,7 @@
 <div class=clearfix></div>
 <?php $this->widget('bootstrap.widgets.TbButton', array('type'=>'success','buttonType'=>'link','icon'=>'icon-share',
  'url'=>Yii::app()->request->url.'&excel=1','label'=>'Export to Excel'));?><br><br>
+<?endif;?>
   <?php 
     $class=array();
     $ptypes=array();
@@ -173,17 +175,21 @@
           <td><?=$c->date?></td>
           <td><?=$seller[$c->seller]?></td>
           <td><?=$c->value?></td>
+          <?php if(!$data['excel']):?>
           <td>
             <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'link', 'type'=>'primary', 'label'=>'Add Collection',
              'url'=>Yii::app()->createUrl('collections/update',array('id'=>$c->id)),'label'=>'Update'));?>
           </td>
+          <?php endif;?>
         </tr>
         <?php endforeach;?>
       </table>
   <?php $this->endWidget();?>
   <?php endif;?>
+  <?php if(!$data['excel']):?>
   <?php $this->widget('bootstrap.widgets.TbButton', array('buttonType'=>'link', 'type'=>'success', 'label'=>'Add Collection',
    'url'=>Yii::app()->createUrl('collections/create'),'label'=>'Add Collection'));?>
+  <?php endif;?>
   <?php if($data['excel']):?>
 <?php
      $file ='ADVANCE_TKT_SALES.xls';
