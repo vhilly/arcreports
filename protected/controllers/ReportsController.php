@@ -130,10 +130,12 @@
       $model->unsetAttributes();  // clear any default values
       $rf = new ReportForm;
       $dr='';
+      $dr2='';
       if(isset($_GET['ReportForm'])){
         $rf->attributes=$_GET['ReportForm'];
         if($rf->date_range){
           $dr = " AND date_used BETWEEN '".str_replace(' - ','\' AND \'',$rf->date_range)."'";
+          $dr2 = " AND date BETWEEN '".str_replace(' - ','\' AND \'',$rf->date_range)."'";
           $model->date_range=$rf->date_range;
         }
      
@@ -141,7 +143,7 @@
       if(isset($_GET['AdvanceTicket'])){
         $model->attributes=$_GET['AdvanceTicket'];
       }
-      $collections=Collections::model()->findAll(array('condition'=>"1 $dr"));
+      $collections=Collections::model()->findAll(array('condition'=>"1 $dr2"));
       $at=AdvanceTicket::model()->findAll(array('condition'=>"status=2 $dr"));
       $classes=SeatingClass::model()->findAll();
       if($excel)
